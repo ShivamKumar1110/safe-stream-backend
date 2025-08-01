@@ -31,3 +31,7 @@ async def upload_video(file: UploadFile = File(...)):
     except Exception as e:
         print(f"❌ Error: {e}")
         return JSONResponse(content={"error": str(e)}, status_code=500)
+        if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
+

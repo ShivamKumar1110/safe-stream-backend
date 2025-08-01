@@ -15,6 +15,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ✅ Root route for health check
+@app.get("/")
+async def root():
+    return {"message": "Safe Stream Backend is running"}
+
 @app.post("/upload/")
 async def upload_video(file: UploadFile = File(...)):
     try:
@@ -25,13 +30,15 @@ async def upload_video(file: UploadFile = File(...)):
         results = analyze_video(video_path)
         os.remove(video_path)
 
-        status = "unsafe" if results else "safe"  # ✅ NEW LINE
-        return JSONResponse(content={"status": status, "results": results})  # ✅ MODIFIED
+        status = "unsafe" if results else "safe"
+        return JSONResponse(content={"status": status, "results": results})
 
     except Exception as e:
         print(f"❌ Error: {e}")
         return JSONResponse(content={"error": str(e)}, status_code=500)
-        if __name__ == "__main__":
+
+# ✅ Optional: for local testing only
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
 
